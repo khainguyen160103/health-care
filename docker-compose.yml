@@ -1,0 +1,259 @@
+version: "3.8"
+
+services:
+  postgres-user:
+    image: postgres:latest
+    container_name: postgresAuthService
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: UserDb
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./volumes/user:/var/lib/postgresql/data
+    networks:
+      - healthcare-network # Sửa từ HealthCare thành healthcare-network
+  postgres-notification:
+    image: postgres:latest
+    container_name: postgresNotificationService
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: NotificationDb
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./volumes/notification:/var/lib/postgresql/data
+    networks:
+      - healthcare-network # Sửa từ HealthCare thành healthcare-network
+  postgres-medical:
+    image: postgres:latest
+    container_name: postgresMedicalService
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: MedicalDb
+    ports:
+      - "5436:5432"
+    volumes:
+      - ./volumes/medical:/var/lib/postgresql/data
+    networks:
+      - healthcare-network # Sửa từ HealthCare thành healthcare-network
+  postgres-doctor:
+    image: postgres:latest
+    container_name: postgresDoctorService
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: DoctorDb
+    ports:
+      - "5437:5432"
+    volumes:
+      - ./volumes/doctor:/var/lib/postgresql/data
+    networks:
+      - healthcare-network # Sửa từ HealthCare thành healthcare-network
+  postgres-appointment:
+    image: postgres:latest
+    container_name: postgresAppointmentService
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: AppointmentDb
+    ports:
+      - "5435:5432"
+    volumes:
+      - ./volumes/appointment:/var/lib/postgresql/data
+    networks:
+      - healthcare-network # Sửa từ HealthCare thành healthcare-network
+  postgres-patient:
+    image: postgres:latest
+    container_name: postgresPatientService
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: PatientDb
+    ports:
+      - "5438:5432"
+    volumes:
+      - ./volumes/patient:/var/lib/postgresql/data
+    networks:
+      - healthcare-network # Sửa từ HealthCare thành healthcare-network
+  nginx-gateway:
+    image: nginx:alpine
+    container_name: healthcare-gateway
+    ports:
+      - "80:80" # Map port 80 ra ngoài
+    volumes:
+      - ./be/gateway/nginx.conf:/etc/nginx/nginx.conf:ro # Mount nginx config
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # Cho phép Docker connect đến localhost
+    restart: unless-stopped
+    networks:
+      - healthcare-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--tries=1",
+          "--spider",
+          "http://localhost/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+  auth-service:
+    build:
+      context: ./be/auth-service
+      dockerfile: Dockerfile
+    container_name: auth-service
+    ports:
+      - "5001:5001"
+    environment:
+      - PYTHONUNBUFFERED=1
+      # Thêm các biến môi trường khác nếu cần
+    networks:
+      - healthcare-network
+    volumes:
+      - ./be/auth-service:/app
+    depends_on:
+      - postgres-user
+  patient-service:
+    build:
+      context: ./be/patient-service
+      dockerfile: Dockerfile
+    container_name: patient-service
+    ports:
+      - "5002:5002"
+    environment:
+      - PYTHONUNBUFFERED=1
+      # Thêm các biến môi trường khác nếu cần
+    networks:
+      - healthcare-network
+    volumes:
+      - ./be/patient-service:/app
+    depends_on:
+      - postgres-patient
+  doctor-service:
+    build:
+      context: ./be/doctor-service
+      dockerfile: Dockerfile
+    container_name: doctor-service
+    ports:
+      - "5003:5003"
+    environment:
+      - PYTHONUNBUFFERED=1
+      # Thêm các biến môi trường khác nếu cần
+    networks:
+      - healthcare-network
+    volumes:
+      - ./be/doctor-service:/app
+    depends_on:
+      - postgres-doctor
+  appointment-service:
+    build:
+      context: ./be/appointment-service
+      dockerfile: Dockerfile
+    container_name: appointment-service
+    ports:
+      - "5004:5004"
+    environment:
+      - PYTHONUNBUFFERED=1
+      # Thêm các biến môi trường khác nếu cần
+    networks:
+      - healthcare-network
+    volumes:
+      - ./be/appointment-service:/app
+    depends_on:
+      - postgres-appointment
+  phamarcy-service:
+    build:
+      context: ./be/phamarcy-service
+      dockerfile: Dockerfile
+    container_name: phamarcy-service
+    ports:
+      - "5005:5005"
+    environment:
+      - PYTHONUNBUFFERED=1
+      # Thêm các biến môi trường khác nếu cần
+    networks:
+      - healthcare-network
+    volumes:
+      - ./be/phamarcy-service:/app
+    depends_on:
+      - postgres-medical
+  laboratory-service:
+    build:
+      context: ./be/laboratory-service
+      dockerfile: Dockerfile
+    container_name: laboratory-service
+    ports:
+      - "5006:5006"
+    environment:
+      - PYTHONUNBUFFERED=1
+      # Thêm các biến môi trường khác nếu cần
+    networks:
+      - healthcare-network
+    volumes:
+      - ./be/laboratory-service:/app
+    depends_on:
+      - postgres-medical
+  notification-service:
+    build:
+      context: ./be/notification-service
+      dockerfile: Dockerfile
+    container_name: notification-service
+    ports:
+      - "5008:5008"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MAILTRAP_USERNAME=eeaccdaef3d12d
+      - MAILTRAP_PASSWORD=3b27c45370fe62
+
+    volumes:
+      - ./be/notification-service:/app
+      # Thêm các biến môi trường khác nếu cần
+    networks:
+      - healthcare-network
+    depends_on:
+      - postgres-notification
+  postgres-billing:
+    image: postgres:latest
+    container_name: postgresBillingService
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: BillingDb
+    ports:
+      - "5439:5432"
+    volumes:
+      - ./volumes/billing:/var/lib/postgresql/data
+    networks:
+      - healthcare-network
+  billing-service:
+    build:
+      context: ./be/billing-service
+      dockerfile: Dockerfile
+    container_name: billing-service
+    ports:
+      - "5007:5007"
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - healthcare-network
+    volumes:
+      - ./be/billing-service:/app
+    depends_on:
+      - postgres-billing
+networks:
+  healthcare-network:
+    driver: bridge
+    name: healthcare-network

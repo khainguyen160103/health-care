@@ -1,0 +1,464 @@
+# ========================================
+# OPERATING SYSTEM FILES
+# ========================================
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux
+*~
+.directory
+
+# ========================================
+# EDITOR & IDE FILES
+# ========================================
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# PyCharm
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ========================================
+# PYTHON BACKEND FILES
+# ========================================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+media/
+staticfiles/
+static/
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ========================================
+# NODE.JS FRONTEND FILES
+# ========================================
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Production builds
+dist/
+dist-ssr/
+build/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# Instrumentation
+.nyc_output
+
+# Grunt intermediate storage
+.grunt
+
+# Bower dependency directory
+bower_components
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons
+build/Release
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# parcel-bundler cache
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+
+# Gatsby files
+.cache/
+public
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Rollup.js default build output
+dist/
+
+# Temporary folders
+tmp/
+temp/
+
+# ========================================
+# DOCKER FILES
+# ========================================
+# Docker volumes and data
+volumes/
+data/
+postgres_data/
+mysql_data/
+redis_data/
+
+# Docker compose override files
+docker-compose.override.yml
+docker-compose.prod.yml
+docker-compose.local.yml
+
+# ========================================
+# DATABASE FILES
+# ========================================
+# SQLite
+*.sqlite
+*.sqlite3
+*.db
+
+# PostgreSQL
+*.dump
+*.sql.gz
+
+# MySQL
+*.sql
+
+# MongoDB
+*.bson
+
+# ========================================
+# LOG FILES
+# ========================================
+# Application logs
+logs/
+*.log
+log/
+
+# Nginx logs
+access.log
+error.log
+
+# ========================================
+# SECURITY & CREDENTIALS
+# ========================================
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+
+# Secrets
+secrets/
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Configuration files with sensitive data
+config/local.py
+config/production.py
+local_settings.py
+
+# API keys
+api_keys.json
+credentials.json
+
+# ========================================
+# BACKUP & TEMPORARY FILES
+# ========================================
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Thumbnails
+._*
+
+# ========================================
+# TESTING FILES
+# ========================================
+# Test coverage
+coverage/
+.coverage
+htmlcov/
+
+# Test databases
+test.db
+test.sqlite3
+
+# ========================================
+# MICROSERVICES SPECIFIC
+# ========================================
+# Service specific data directories
+auth-service/data/
+patient-service/data/
+doctor-service/data/
+appointment-service/data/
+billing-service/data/
+laboratory-service/data/
+notification-service/data/
+phamarcy-service/data/
+chat-service/data/
+
+# Migration files (keep tracked but ignore local changes)
+# */migrations/
+
+# Static files collected
+*/static/
+*/staticfiles/
+
+# Media files uploaded by users
+*/media/
+
+# ========================================
+# MONITORING & ANALYTICS
+# ========================================
+# Prometheus data
+prometheus_data/
+
+# Grafana data
+grafana_data/
+
+# ELK stack data
+elasticsearch_data/
+logstash_data/
+kibana_data/
+
+# ========================================
+# DOCUMENTATION BUILD
+# ========================================
+# Sphinx build
+_build/
+_static/
+_templates/
+
+# MkDocs
+site/
+
+# ========================================
+# PACKAGE MANAGERS
+# ========================================
+# Poetry
+poetry.lock
+
+# Pipenv
+Pipfile.lock
+
+# Conda
+.conda/
+
+# ========================================
+# CUSTOM PROJECT FILES
+# ========================================
+# Development scripts
+dev_scripts/
+local_scripts/
+
+# Personal notes
+TODO.md
+NOTES.md
+personal_notes/
+
+# Local configuration overrides
+local_config/
+dev_config/
+
+# Sample data for development
+sample_data/
+mock_data/
+
+# Generated documentation
+docs/build/
+docs/_build/
+
+# Deployment files
+deploy/
+deployment/
+k8s/
+
+# Cache directories
+.cache/
+cache/
+
+# Lock files
+package-lock.json
+yarn.lock
