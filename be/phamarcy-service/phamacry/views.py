@@ -10,7 +10,7 @@ import uuid
 class MedicationViewSet(viewsets.ModelViewSet):
     queryset = Medication.objects.all()
     serializer_class = MedicationSerializer
-    permission_classes = [permissions.IsAuthenticated]
+
     
     def get_queryset(self):
         queryset = Medication.objects.all()
@@ -24,7 +24,7 @@ class MedicationViewSet(viewsets.ModelViewSet):
 class PrescriptionViewSet(viewsets.ModelViewSet):
     queryset = Prescription.objects.all()
     serializer_class = PrescriptionSerializer
-    permission_classes = [permissions.IsAuthenticated]
+
     
     def get_queryset(self):
         queryset = Prescription.objects.all()
@@ -82,7 +82,6 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
 class InventoryViewSet(viewsets.ModelViewSet):
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
-    permission_classes = [permissions.IsAuthenticated]
 
     @action(detail=True, methods=['put'])
     def update_stock(self, request, pk=None):

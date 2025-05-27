@@ -9,14 +9,50 @@ class RegisterSerializer(serializers.ModelSerializer):
     """
     Serializer for user registration.
     """
+    password = serializers.CharField(write_only=True, min_length=8)
+    password_confirm = serializers.CharField(write_only=True)
+    
+    # Thêm các field optional cho profile data
+    date_of_birth = serializers.DateField(required=False)
+    gender = serializers.CharField(required=False)
+    address = serializers.CharField(required=False)
+    phone = serializers.CharField(required=False)
+    emergency_contact = serializers.CharField(required=False)
+    license_number = serializers.CharField(required=False)
+    specialization = serializers.CharField(required=False)
+    experience_years = serializers.IntegerField(required=False)
+    biography = serializers.CharField(required=False)
+
     class Meta:
         model = User
-        fields = ['email', 'first_name', 'last_name', 'user_type', 'password']
+        fields = ['email', 'password', 'password_confirm', 'first_name', 'last_name', 
+                 'user_type', 'date_of_birth', 'gender', 'address', 'phone', 
+                 'emergency_contact', 'license_number', 'specialization', 
+                 'experience_years', 'biography']
         extra_kwargs = {
             'password': {'write_only': True}
         }
 
+    def validate(self, attrs):
+        # Validate required fields based on user_type
+        user_type = attrs.get('user_type')
+        if user_type == 'doctor':
+            if not attrs.get('license_number'):
+                raise serializers.ValidationError("License number is required for doctors")
+            if not attrs.get('specialization'):
+                raise serializers.ValidationError("Specialization is required for doctors")
+        
+        return attrs
+
     def create(self, validated_data):
+        # Remove profile-specific fields before creating user
+        profile_fields = ['date_of_birth', 'gender', 'address', 'phone', 
+                         'emergency_contact', 'license_number', 'specialization', 
+                         'experience_years', 'biography']
+        
+        for field in profile_fields:
+            validated_data.pop(field, None)
+            
         user = User(
             email=validated_data['email'],
             first_name=validated_data['first_name'],

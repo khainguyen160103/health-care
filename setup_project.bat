@@ -173,7 +173,7 @@ echo.
 echo CMD ["python", "manage.py", "runserver", "0.0.0.0:5004"]
 ) > be\appointment-service\Dockerfile
 
-REM Pharmacy Service Dockerfile (Port 5005)
+REM Phamacry Service Dockerfile (Port 5005)
 echo   🔧 Creating Dockerfile for phamarcy-service...
 (
 echo FROM python:3.10-slim

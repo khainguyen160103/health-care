@@ -90,7 +90,7 @@ echo   Auth Service:         http://localhost:5001
 echo   Patient Service:      http://localhost:5002
 echo   Doctor Service:       http://localhost:5003
 echo   Appointment Service:  http://localhost:5004
-echo   Pharmacy Service:     http://localhost:5005
+echo   Phamacry Service:     http://localhost:5005
 echo   Laboratory Service:   http://localhost:5006
 echo   Billing Service:      http://localhost:5007
 echo   Notification Service: http://localhost:5008

@@ -14,8 +14,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-default-key-for-dev')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
-
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'auth-service', '*']
+SERVICE_URLS = {
+    'patient': 'http://patient-service:5002/api/patients/',
+    'doctor': 'http://doctor-service:5003/api/doctors/',
+    'pharmacy': 'http://phamarcy-service:5006/api/pharmacy-staff/',
+    'lab': 'http://laboratory-service:5005/api/lab-staff/',
+}
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',

@@ -6,11 +6,16 @@ from .models import Doctor, Schedule
 from .serializers import DoctorSerializer, ScheduleSerializer, DoctorProfileSerializer
 import requests
 from django.utils import timezone
+from rest_framework.permissions import AllowAny
 
 class DoctorViewSet(viewsets.ModelViewSet):
     queryset = Doctor.objects.all()
     serializer_class = DoctorSerializer
-    permission_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        """Cho phép auth-service tạo doctor profile mà không cần authentication"""
+        if self.action == 'create':
+            return [AllowAny()]
     
     def get_queryset(self):
         queryset = Doctor.objects.filter(is_active=True)
@@ -79,3 +84,26 @@ class DoctorViewSet(viewsets.ModelViewSet):
         """Lấy danh sách chuyên khoa"""
         specializations = Doctor.objects.values_list('specialization', flat=True).distinct()
         return Response(list(specializations))
+
+    def create(self, request, *args, **kwargs):
+        """Tạo doctor profile từ auth-service"""
+        try:
+            # Kiểm tra xem doctor đã tồn tại chưa
+            user_id = request.data.get('user_id')
+            if Doctor.objects.filter(user_id=user_id).exists():
+                return Response(
+                    {'error': 'Doctor profile already exists'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            serializer = self.get_serializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+        except Exception as e:
+            return Response(
+                {'error': f'Failed to create doctor profile: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-)w6zew+omvs)2b!nnqcr*63i!zyr^7*o0#fd*qf2!hl=x4g3an
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'phamarcy-service', '*']
 
 
 # Application definition
@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'phamarcy',
+    'phamacry',
 ]
 
 MIDDLEWARE = [

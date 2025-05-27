@@ -11,7 +11,7 @@ import requests
 class BillViewSet(viewsets.ModelViewSet):
     queryset = Bill.objects.all()
     serializer_class = BillSerializer
-    permission_classes = [permissions.IsAuthenticated]
+
     
     def get_queryset(self):
         queryset = Bill.objects.all()
@@ -110,7 +110,7 @@ class BillViewSet(viewsets.ModelViewSet):
 class InsuranceClaimViewSet(viewsets.ModelViewSet):
     queryset = InsuranceClaim.objects.all()
     serializer_class = InsuranceClaimSerializer
-    permission_classes = [permissions.IsAuthenticated]
+
     
     @action(detail=True, methods=['post'])
     def approve(self, request, pk=None):
@@ -149,4 +149,4 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
 class PaymentViewSet(viewsets.ModelViewSet):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
-    permission_classes = [permissions.IsAuthenticated]
+

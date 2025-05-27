@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-kbq1)^7y2v#pa=wx1=nd$wg3u47ie@@#&lxre8frp)^ez358=*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']  # Cho phép truy cập từ mọi domain, nên cấu hình cụ thể khi deploy production
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'chat-service', '*']  # Cho phép truy cập từ mọi domain, nên cấu hình cụ thể khi deploy production
 
 
 # Application definition

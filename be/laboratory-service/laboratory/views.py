@@ -10,7 +10,7 @@ import uuid
 class LabTestViewSet(viewsets.ModelViewSet):
     queryset = LabTest.objects.all()
     serializer_class = LabTestSerializer
-    permission_classes = [permissions.IsAuthenticated]
+
     
     def get_queryset(self):
         queryset = LabTest.objects.all()
@@ -98,4 +98,3 @@ class LabTestViewSet(viewsets.ModelViewSet):
 class LabTestTemplateViewSet(viewsets.ModelViewSet):
     queryset = LabTestTemplate.objects.all()
     serializer_class = LabTestTemplateSerializer
-    permission_classes = [permissions.IsAuthenticated]
