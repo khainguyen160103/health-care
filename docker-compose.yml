@@ -110,19 +110,7 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-  chat-service:
-    build:
-      context: ./be/chat-service
-      dockerfile: Dockerfile
-    container_name: chat-service
-    ports:
-      - "5000:5000"
-    environment:
-      - PYTHONUNBUFFERED=1
-    networks:
-      - healthcare-network
-    volumes:
-      - ./be/chat-service:/app
+
   auth-service:
     build:
       context: ./be/auth-service
@@ -251,19 +239,7 @@ services:
       - ./volumes/billing:/var/lib/postgresql/data
     networks:
       - healthcare-network
-  postgres-chat:
-    image: postgres:latest
-    container_name: postgresChatService
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: ChatDb
-    ports:
-      - "5440:5432"
-    volumes:
-      - ./volumes/chat:/var/lib/postgresql/data
-    networks:
-      - healthcare-network
+
   billing-service:
     build:
       context: ./be/billing-service
