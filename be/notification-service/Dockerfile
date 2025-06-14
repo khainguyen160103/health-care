@@ -14,4 +14,14 @@ COPY . .
 
 EXPOSE 5008
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:5008"]
+# Tạo script để chạy migrations và khởi động server
+RUN echo '#!/bin/bash\n\
+    echo "🔄 Waiting for database..."\n\
+    sleep 10\n\
+    echo "🔄 Running migrations..."\n\
+    python manage.py makemigrations\n\
+    python manage.py migrate\n\
+    echo "🚀 Starting server..."\n\
+    exec python manage.py runserver 0.0.0.0:5008' > /start.sh && chmod +x /start.sh
+
+CMD ["/start.sh"]

@@ -18,8 +18,8 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'auth-service', '*']
 SERVICE_URLS = {
     'patient': 'http://patient-service:5002/api/patients/',
     'doctor': 'http://doctor-service:5003/api/doctors/',
-    'pharmacy': 'http://phamarcy-service:5006/api/pharmacy-staff/',
-    'lab': 'http://laboratory-service:5005/api/lab-staff/',
+    'pharmacy': 'http://phamarcy-service:5005/api/pharmacy-staff/',
+    'lab': 'http://laboratory-service:5006/api/lab-staff/',
 }
 # Application definition
 INSTALLED_APPS = [
@@ -75,7 +75,7 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': 'postgres',
         'HOST': 'postgres-user',  # Tên container trong docker-compose
-        'PORT': '5432',           # Port bên trong container
+        'PORT': '5432',           # Port bên trong container (không phải external port)
     }
 }
 

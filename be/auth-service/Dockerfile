@@ -18,5 +18,15 @@ COPY . .
 # Expose port
 EXPOSE 5001
 
-# Chạy Django development server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:5001"]
+# Tạo script để chạy migrations và khởi động server
+RUN echo '#!/bin/bash\n\
+    echo "🔄 Waiting for database..."\n\
+    sleep 10\n\
+    echo "🔄 Running migrations..."\n\
+    python manage.py makemigrations\n\
+    python manage.py migrate\n\
+    echo "🚀 Starting server..."\n\
+    exec python manage.py runserver 0.0.0.0:5001' > /start.sh && chmod +x /start.sh
+
+# Chạy script khởi động
+CMD ["/start.sh"]
