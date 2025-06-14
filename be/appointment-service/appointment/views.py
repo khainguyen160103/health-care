@@ -282,41 +282,84 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def doctor_appointments(self, request):
-        """Get appointments for current doctor - dùng cho Doctor Dashboard"""
+        """Lấy appointments cho bác sĩ"""
         user_info, error = self._get_user_info(request)
         if error:
             return error
-            
-        if user_info['user_type'] != 'doctor':
-            return Response({'error': 'Only doctors can access this endpoint'}, status=403)
-
+        
+        if user_info.get('user_type') != 'doctor':
+            return Response({"detail": "Doctor access required."}, status=403)
+        
         try:
-            # Get doctor profile
-            doctor_response = requests.get(
-                f'http://doctor-service:5003/api/doctors/profile/', 
-                headers={'Authorization': request.headers.get('Authorization')},
-                timeout=5
-            )
-            if doctor_response.status_code == 200:
-                doctor_data = doctor_response.json()
-                
-                # Filter by date if provided, default to today
-                date_filter = request.query_params.get('date')
-                if not date_filter:
-                    date_filter = timezone.now().date()
-                
-                appointments = Appointment.objects.filter(
-                    doctor_id=doctor_data['id'],
-                    appointment_date=date_filter
-                ).order_by('appointment_time')
-                
-                serializer = AppointmentSerializer(appointments, many=True)
-                return Response({'results': serializer.data})
-            else:
-                return Response({'error': 'Doctor profile not found'}, status=404)
-                
+            # Lấy doctor_id từ doctor service
+            resp = requests.get(f'http://doctor-service:5003/api/doctors/', 
+                              params={'user_id': user_info['id']})
+            if resp.status_code == 200:
+                doctors = resp.json()
+                if doctors:
+                    doctor_id = doctors[0]['id']
+                    queryset = self.get_queryset().filter(doctor_id=doctor_id)
+                    
+                    # Filter by date if provided
+                    date_filter = request.query_params.get('date')
+                    if date_filter:
+                        queryset = queryset.filter(appointment_date=date_filter)
+                    
+                    # Filter by status if provided
+                    status_filter = request.query_params.get('status')
+                    if status_filter:
+                        queryset = queryset.filter(status=status_filter)
+                    
+                    serializer = self.get_serializer(queryset, many=True)
+                    return Response(serializer.data)
         except Exception as e:
-            return Response({'error': str(e)}, status=500)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        return Response([], status=status.HTTP_200_OK)
+    
+    @action(detail=True, methods=['post'])
+    def update_status(self, request, pk=None):
+        """Cập nhật trạng thái appointment"""
+        appointment = self.get_object()
+        new_status = request.data.get('status')
+        
+        if new_status not in dict(Appointment.STATUS_CHOICES):
+            return Response({'error': 'Invalid status'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        old_status = appointment.status
+        appointment.status = new_status
+        appointment.save()
+        
+        # Ghi lại lịch sử thay đổi
+        AppointmentHistory.objects.create(
+            appointment=appointment,
+            action=f'Status changed from {old_status} to {new_status}',
+            note=request.data.get('note', ''),
+            created_by=1
+        )
+        
+        serializer = self.get_serializer(appointment)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def statistics(self, request):
+        """Thống kê appointments"""
+        from django.db.models import Count
+        from datetime import date, timedelta
+        
+        today = date.today()
+        week_ago = today - timedelta(days=7)
+        
+        stats = {
+            'total_appointments': Appointment.objects.count(),
+            'today_appointments': Appointment.objects.filter(appointment_date=today).count(),
+            'this_week': Appointment.objects.filter(appointment_date__gte=week_ago).count(),
+            'by_status': dict(
+                Appointment.objects.values('status').annotate(count=Count('status')).values_list('status', 'count')
+            )
+        }
+        
+        return Response(stats)
 
     @action(detail=True, methods=['post'])
     def confirm(self, request, pk=None):

@@ -204,3 +204,37 @@ class UserViewSet(viewsets.ModelViewSet):
                 'error': 'Unable to fetch user information',
                 'detail': str(e)
             }, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def profile(self, request):
+        """Lấy profile đầy đủ của user"""
+        user = request.user
+        profile_data = {
+            "id": str(user.id),
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "user_type": user.user_type,
+            "is_active": user.is_active,
+            "date_joined": user.date_joined,
+        }
+        
+        # Lấy thông tin chi tiết từ service tương ứng
+        if user.user_type == 'patient':
+            try:
+                resp = requests.get(f'http://patient-service:5002/api/patients/profile/', 
+                                  headers={'Authorization': request.headers.get('Authorization')})
+                if resp.status_code == 200:
+                    profile_data['patient_info'] = resp.json()
+            except Exception:
+                pass
+        elif user.user_type == 'doctor':
+            try:
+                resp = requests.get(f'http://doctor-service:5003/api/doctors/profile/', 
+                                  headers={'Authorization': request.headers.get('Authorization')})
+                if resp.status_code == 200:
+                    profile_data['doctor_info'] = resp.json()
+            except Exception:
+                pass
+        
+        return Response(profile_data)

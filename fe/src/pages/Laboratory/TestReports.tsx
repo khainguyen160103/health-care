@@ -16,53 +16,191 @@ export default function TestReports() {
     reviewed: false,
   });
 
+  // Expanded mock test results data for demo purposes
   const testResults = [
     {
       id: 1,
-      orderNumber: "LAB001",
-      patient: "John Doe",
-      testType: "Complete Blood Count",
+      orderNumber: "XN001",
+      patient: "Nguyễn Văn A",
+      testType: "Công thức máu",
       results: {
         WBC: {
           value: "8.5",
           unit: "×10³/μL",
           range: "4.0-11.0",
-          status: "Normal",
+          status: "Bình thường",
         },
-        RBC: { value: "4.2", unit: "×10⁶/μL", range: "4.5-5.5", status: "Low" },
+        RBC: { value: "4.2", unit: "×10⁶/μL", range: "4.5-5.5", status: "Thấp" },
         Hemoglobin: {
           value: "12.5",
           unit: "g/dL",
           range: "14.0-18.0",
-          status: "Low",
+          status: "Thấp",
         },
-        Hematocrit: { value: "37.2", unit: "%", range: "42-52", status: "Low" },
+        Hematocrit: { value: "37.2", unit: "%", range: "42-52", status: "Thấp" },
+        Platelets: { value: "280", unit: "×10³/μL", range: "150-400", status: "Bình thường" },
       },
-      interpretation: "Mild anemia suggested. Recommend iron studies.",
-      technician: "Lab Tech A",
+      interpretation: "Thiếu máu nhẹ. Khuyến nghị xét nghiệm sắt.",
+      technician: "KTV. Trần Thị B",
       completed: "2024-01-20 14:30",
-      status: "Final",
+      status: "Hoàn thành",
       critical: false,
+      doctor: "BS. Nguyễn Văn C",
+      department: "Nội khoa",
     },
     {
       id: 2,
-      orderNumber: "LAB002",
-      patient: "Jane Smith",
-      testType: "Blood Glucose",
+      orderNumber: "XN002",
+      patient: "Lê Văn D",
+      testType: "Đường máu",
       results: {
         Glucose: {
           value: "350",
           unit: "mg/dL",
           range: "70-100",
-          status: "Critical High",
+          status: "Cao nghiêm trọng",
+        },
+        HbA1c: {
+          value: "12.5",
+          unit: "%",
+          range: "4.0-6.0",
+          status: "Cao nghiêm trọng",
         },
       },
       interpretation:
-        "Severely elevated glucose. Immediate physician notification required.",
-      technician: "Lab Tech B",
+        "Đường huyết tăng nghiêm trọng. Cần thông báo bác sĩ ngay lập tức.",
+      technician: "KTV. Phạm Văn E",
       completed: "2024-01-20 15:15",
-      status: "Final",
+      status: "Hoàn thành",
       critical: true,
+      doctor: "BS. Hoàng Thị F",
+      department: "Nội tiết",
+    },
+    {
+      id: 3,
+      orderNumber: "XN003",
+      patient: "Trần Thị G",
+      testType: "Nước tiểu",
+      results: {
+        Protein: {
+          value: "Âm tính",
+          unit: "",
+          range: "Âm tính",
+          status: "Bình thường",
+        },
+        Glucose: {
+          value: "Âm tính", 
+          unit: "",
+          range: "Âm tính",
+          status: "Bình thường",
+        },
+        WBC: {
+          value: "2-3",
+          unit: "/hpf",
+          range: "0-5",
+          status: "Bình thường",
+        },
+        RBC: {
+          value: "0-1",
+          unit: "/hpf", 
+          range: "0-2",
+          status: "Bình thường",
+        },
+      },
+      interpretation: "Kết quả xét nghiệm nước tiểu bình thường.",
+      technician: "KTV. Lê Văn H",
+      completed: "2024-01-20 11:45",
+      status: "Hoàn thành",
+      critical: false,
+      doctor: "BS. Võ Thị I",
+      department: "Tiết niệu",
+    },
+    {
+      id: 4,
+      orderNumber: "XN004",
+      patient: "Phạm Văn J",
+      testType: "Sinh hóa máu",
+      results: {
+        ALT: {
+          value: "85",
+          unit: "U/L",
+          range: "7-40",
+          status: "Cao",
+        },
+        AST: {
+          value: "78",
+          unit: "U/L", 
+          range: "10-40",
+          status: "Cao",
+        },
+        Bilirubin: {
+          value: "2.8",
+          unit: "mg/dL",
+          range: "0.2-1.2",
+          status: "Cao",
+        },
+        Creatinine: {
+          value: "1.0",
+          unit: "mg/dL",
+          range: "0.6-1.2",
+          status: "Bình thường",
+        },
+      },
+      interpretation: "Men gan tăng nhẹ. Khuyến nghị theo dõi và tái khám.",
+      technician: "KTV. Ngô Thị K",
+      completed: "2024-01-20 16:20",
+      status: "Hoàn thành",
+      critical: false,
+      doctor: "BS. Đinh Văn L",
+      department: "Tiêu hóa",
+    },
+    {
+      id: 5,
+      orderNumber: "XN005",
+      patient: "Hoàng Thị M",
+      testType: "X-Ray ngực",
+      results: {
+        Description: {
+          value: "Phổi hai bên trong giới hạn bình thường. Tim có kích thước bình thường.",
+          unit: "",
+          range: "",
+          status: "Bình thường",
+        },
+      },
+      interpretation: "X-quang ngực bình thường. Không phát hiện bất thường.",
+      technician: "KTV. Bùi Văn N",
+      completed: "2024-01-20 13:10",
+      status: "Hoàn thành", 
+      critical: false,
+      doctor: "BS. Trương Thị O",
+      department: "Hô hấp",
+    },
+    {
+      id: 6,
+      orderNumber: "XN006",
+      patient: "Lý Văn P",
+      testType: "HIV/AIDS",
+      results: {
+        "HIV Antibody": {
+          value: "Âm tính",
+          unit: "",
+          range: "Âm tính",
+          status: "Bình thường",
+        },
+        "HIV Antigen": {
+          value: "Âm tính",
+          unit: "",
+          range: "Âm tính", 
+          status: "Bình thường",
+        },
+      },
+      interpretation: "Kết quả âm tính với HIV. Không phát hiện nhiễm virus.",
+      technician: "KTV. Cao Thị Q",
+      completed: "2024-01-20 17:30",
+      status: "Hoàn thành",
+      critical: false,
+      doctor: "BS. Đặng Văn R",
+      department: "Nhiễm khuẩn",
     },
   ];
 
@@ -98,18 +236,18 @@ export default function TestReports() {
           startIcon={<PlusIcon />}
           onClick={() => setShowAddReport(true)}
         >
-          Add Test Report
+          Thêm báo cáo xét nghiệm
         </Button>
       </div>
 
       {/* Add Report Form */}
       {showAddReport && (
-        <ComponentCard title="Add Test Report">
+        <ComponentCard title="Thêm báo cáo xét nghiệm">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
                 <label className="mb-2 block text-sm font-medium">
-                  Order Number
+                  Số hiệu yêu cầu
                 </label>
                 <select
                   value={reportForm.orderNumber}
@@ -122,14 +260,14 @@ export default function TestReports() {
                   className="w-full rounded-lg border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-700"
                   required
                 >
-                  <option value="">Select Order</option>
+                  <option value="">Chọn đơn xét nghiệm</option>
                   <option value="LAB003">LAB003 - Mike Johnson</option>
                   <option value="LAB004">LAB004 - Sarah Wilson</option>
                 </select>
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium">
-                  Test Type
+                  Loại xét nghiệm
                 </label>
                 <input
                   type="text"
@@ -138,7 +276,7 @@ export default function TestReports() {
                     setReportForm({ ...reportForm, testType: e.target.value })
                   }
                   className="w-full rounded-lg border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-700"
-                  placeholder="e.g., Complete Blood Count"
+                  placeholder="vd: Công thức máu hoàn chỉnh"
                   required
                 />
               </div>
@@ -146,7 +284,7 @@ export default function TestReports() {
 
             <div>
               <label className="mb-2 block text-sm font-medium">
-                Test Results
+                Kết quả xét nghiệm
               </label>
               <textarea
                 value={reportForm.results}
@@ -155,14 +293,14 @@ export default function TestReports() {
                 }
                 rows={6}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-700"
-                placeholder="Enter detailed test results..."
+                placeholder="Nhập kết quả xét nghiệm chi tiết..."
                 required
               />
             </div>
 
             <div>
               <label className="mb-2 block text-sm font-medium">
-                Clinical Interpretation
+                Diễn giải lâm sàng
               </label>
               <textarea
                 value={reportForm.interpretation}
@@ -174,14 +312,14 @@ export default function TestReports() {
                 }
                 rows={4}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-700"
-                placeholder="Clinical interpretation and recommendations..."
+                placeholder="Diễn giải và khuyến nghị lâm sàng..."
                 required
               />
             </div>
 
             <div>
               <label className="mb-2 block text-sm font-medium">
-                Technician
+                Kỹ thuật viên
               </label>
               <input
                 type="text"
@@ -190,7 +328,7 @@ export default function TestReports() {
                   setReportForm({ ...reportForm, technician: e.target.value })
                 }
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-700"
-                placeholder="Technician name"
+                placeholder="Tên kỹ thuật viên"
                 required
               />
             </div>
@@ -206,15 +344,15 @@ export default function TestReports() {
                 className="rounded border-gray-300"
               />
               <label htmlFor="reviewed" className="text-sm font-medium">
-                Report has been reviewed and approved
+                Báo cáo đã được xem xét và phê duyệt
               </label>
             </div>
 
             <div className="flex justify-end space-x-4">
               <Button variant="outline" onClick={() => setShowAddReport(false)}>
-                Cancel
+                Hủy
               </Button>
-              <Button variant="primary">Save Report</Button>
+              <Button variant="primary">Lưu báo cáo</Button>
             </div>
           </form>
         </ComponentCard>
@@ -231,19 +369,19 @@ export default function TestReports() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-500">
-                    Order: {result.orderNumber}
+                    Số yêu cầu: {result.orderNumber}
                   </p>
                   <p className="text-sm text-gray-500">
-                    Completed: {result.completed}
+                    Ngày hoàn thành: {result.completed}
                   </p>
                   <p className="text-sm text-gray-500">
-                    Technician: {result.technician}
+                    Kỹ thuật viên: {result.technician}
                   </p>
                 </div>
                 <div className="flex items-center space-x-2">
                   {result.critical && (
                     <span className="rounded-full bg-red-100 px-2 py-1 text-xs text-red-800">
-                      Critical
+                      Nguy hiểm
                     </span>
                   )}
                   <span className="rounded-full bg-green-100 px-2 py-1 text-xs text-green-800">
@@ -257,11 +395,11 @@ export default function TestReports() {
                 <table className="w-full table-auto">
                   <thead>
                     <tr className="bg-gray-50 dark:bg-gray-700">
-                      <th className="px-3 py-2 text-left">Test</th>
-                      <th className="px-3 py-2 text-left">Result</th>
-                      <th className="px-3 py-2 text-left">Unit</th>
-                      <th className="px-3 py-2 text-left">Reference Range</th>
-                      <th className="px-3 py-2 text-left">Status</th>
+                      <th className="px-3 py-2 text-left">Xét nghiệm</th>
+                      <th className="px-3 py-2 text-left">Kết quả</th>
+                      <th className="px-3 py-2 text-left">Đơn vị</th>
+                      <th className="px-3 py-2 text-left">Giá trị tham khảo</th>
+                      <th className="px-3 py-2 text-left">Tình trạng</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -292,7 +430,7 @@ export default function TestReports() {
 
               {/* Interpretation */}
               <div>
-                <h4 className="font-medium mb-2">Clinical Interpretation:</h4>
+                <h4 className="font-medium mb-2">Diễn giải lâm sàng:</h4>
                 <p className="text-gray-700 dark:text-gray-300">
                   {result.interpretation}
                 </p>
@@ -301,21 +439,21 @@ export default function TestReports() {
               {/* Actions */}
               <div className="flex justify-end space-x-2">
                 <Button size="sm" variant="outline">
-                  Edit
+                  Chỉnh sửa
                 </Button>
                 <Button
                   size="sm"
                   variant="outline"
                   startIcon={<DownloadIcon />}
                 >
-                  Download
+                  Tải về
                 </Button>
                 <Button
                   size="sm"
                   variant="primary"
                   onClick={() => handleSendReport(result.id)}
                 >
-                  Send to Doctor
+                  Gửi bác sĩ
                 </Button>
               </div>
             </div>

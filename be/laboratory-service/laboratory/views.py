@@ -69,9 +69,6 @@ class LabTestViewSet(viewsets.ModelViewSet):
         results = request.data.get('results')
         technician_notes = request.data.get('technician_notes', '')
         
-        if not results:
-            return Response({'error': 'Results are required'}, status=status.HTTP_400_BAD_REQUEST)
-        
         lab_test.results = results
         lab_test.technician_notes = technician_notes
         lab_test.status = 'completed'
@@ -80,20 +77,40 @@ class LabTestViewSet(viewsets.ModelViewSet):
         
         serializer = self.get_serializer(lab_test)
         return Response(serializer.data)
-
+    
     @action(detail=False, methods=['get'])
     def pending_tests(self, request):
         """Lấy danh sách xét nghiệm chờ xử lý"""
-        tests = LabTest.objects.filter(status__in=['pending', 'sample_collected', 'in_progress'])
-        serializer = self.get_serializer(tests, many=True)
+        queryset = self.get_queryset().filter(status__in=['pending', 'sample_collected', 'in_progress'])
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-
+    
     @action(detail=False, methods=['get'])
-    def urgent_tests(self, request):
-        """Lấy danh sách xét nghiệm cấp cứu"""
-        tests = LabTest.objects.filter(urgent=True, status__in=['pending', 'sample_collected', 'in_progress'])
-        serializer = self.get_serializer(tests, many=True)
-        return Response(serializer.data)
+    def patient_tests(self, request):
+        """Lấy xét nghiệm của bệnh nhân"""
+        patient_id = request.query_params.get('patient_id')
+        if patient_id:
+            queryset = self.get_queryset().filter(patient_id=patient_id)
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
+        return Response({'error': 'patient_id is required'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=False, methods=['get'])
+    def statistics(self, request):
+        """Thống kê xét nghiệm"""
+        from django.db.models import Count
+        
+        stats = {
+            'total_tests': LabTest.objects.count(),
+            'pending_tests': LabTest.objects.filter(status='pending').count(),
+            'completed_tests': LabTest.objects.filter(status='completed').count(),
+            'urgent_tests': LabTest.objects.filter(urgent=True, status__in=['pending', 'in_progress']).count(),
+            'tests_by_type': dict(
+                LabTest.objects.values('test_type').annotate(count=Count('test_type')).values_list('test_type', 'count')
+            )
+        }
+        
+        return Response(stats)
 
 class LabTestTemplateViewSet(viewsets.ModelViewSet):
     queryset = LabTestTemplate.objects.all()

@@ -28,7 +28,6 @@ class AppointmentSerializer(serializers.ModelSerializer):
     # Additional fields for frontend display
     patient_info = serializers.SerializerMethodField()
     doctor_info = serializers.SerializerMethodField()
-    # scheduled_time = serializers.SerializerMethodField()
     
     class Meta:
         model = Appointment

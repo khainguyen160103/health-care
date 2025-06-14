@@ -77,35 +77,110 @@ class BillViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def my_bills(self, request):
         """Lấy hóa đơn của bệnh nhân hiện tại"""
+        # Lấy thông tin user từ token
+        auth_header = request.headers.get("Authorization")
+        if not auth_header:
+            return Response({"detail": "Authentication required."}, status=401)
+        
         try:
-            # Lấy patient info từ request user
-            patient_resp = requests.get(
-                f'http://patient-service:5002/api/patients/profile/', 
-                headers={'Authorization': request.headers.get('Authorization')}
-            )
-            if patient_resp.status_code == 200:
-                patient_data = patient_resp.json()
-                bills = Bill.objects.filter(patient_id=patient_data['id'])
-                serializer = self.get_serializer(bills, many=True)
-                return Response(serializer.data)
+            resp = requests.get('http://auth-service:5001/api/auth/user/', 
+                              headers={'Authorization': auth_header})
+            if resp.status_code == 200:
+                user_info = resp.json()
+                # Lấy patient_id từ patient service
+                patient_resp = requests.get(f'http://patient-service:5002/api/patients/', 
+                                          params={'user_id': user_info['id']})
+                if patient_resp.status_code == 200:
+                    patients = patient_resp.json()
+                    if patients:
+                        patient_id = patients[0]['id']
+                        queryset = self.get_queryset().filter(patient_id=patient_id)
+                        
+                        # Filter by status if provided
+                        status_filter = request.query_params.get('status')
+                        if status_filter:
+                            queryset = queryset.filter(status=status_filter)
+                        
+                        serializer = self.get_serializer(queryset, many=True)
+                        return Response(serializer.data)
         except Exception:
             pass
         
         return Response([], status=status.HTTP_200_OK)
-
-    @action(detail=False, methods=['get'])
-    def overdue_bills(self, request):
-        """Lấy danh sách hóa đơn quá hạn"""
-        overdue_bills = Bill.objects.filter(
-            status='pending',
-            due_date__lt=timezone.now()
-        )
-        # Cập nhật status thành overdue
-        overdue_bills.update(status='overdue')
+    
+    @action(detail=True, methods=['post'])
+    def pay(self, request, pk=None):
+        """Thanh toán hóa đơn"""
+        bill = self.get_object()
+        payment_method = request.data.get('payment_method')
+        amount = request.data.get('amount', bill.total_amount)
         
-        bills = Bill.objects.filter(status='overdue')
-        serializer = self.get_serializer(bills, many=True)
-        return Response(serializer.data)
+        if bill.status == 'paid':
+            return Response({'error': 'Bill already paid'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Tạo payment record
+        payment = Payment.objects.create(
+            bill=bill,
+            amount=amount,
+            payment_method=payment_method,
+            transaction_id=f"TXN-{timezone.now().strftime('%Y%m%d%H%M%S')}-{bill.id}",
+            status='completed'
+        )
+        
+        # Cập nhật trạng thái bill
+        bill.status = 'paid'
+        bill.paid_date = timezone.now()
+        bill.payment_method = payment_method
+        bill.save()
+        
+        return Response({
+            'bill': BillSerializer(bill).data,
+            'payment': PaymentSerializer(payment).data,
+            'message': 'Payment successful'
+        })
+    
+    @action(detail=False, methods=['post'])
+    def create_appointment_bill(self, request):
+        """Tạo hóa đơn từ appointment"""
+        appointment_id = request.data.get('appointment_id')
+        patient_id = request.data.get('patient_id')
+        consultation_fee = request.data.get('consultation_fee', 500000)
+        
+        bill_number = f"BILL-{timezone.now().strftime('%Y%m%d%H%M%S')}"
+        
+        bill = Bill.objects.create(
+            patient_id=patient_id,
+            appointment_id=appointment_id,
+            bill_number=bill_number,
+            items=[{
+                'description': 'Consultation Fee',
+                'amount': consultation_fee,
+                'quantity': 1
+            }],
+            subtotal=consultation_fee,
+            total_amount=consultation_fee,
+            due_date=timezone.now() + timezone.timedelta(days=30)
+        )
+        
+        serializer = self.get_serializer(bill)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    @action(detail=False, methods=['get'])
+    def statistics(self, request):
+        """Thống kê billing"""
+        from django.db.models import Sum, Count
+        
+        stats = {
+            'total_bills': Bill.objects.count(),
+            'pending_bills': Bill.objects.filter(status='pending').count(),
+            'paid_bills': Bill.objects.filter(status='paid').count(),
+            'total_revenue': Bill.objects.filter(status='paid').aggregate(
+                total=Sum('total_amount'))['total'] or 0,
+            'pending_amount': Bill.objects.filter(status='pending').aggregate(
+                total=Sum('total_amount'))['total'] or 0,
+        }
+        
+        return Response(stats)
 
 class InsuranceClaimViewSet(viewsets.ModelViewSet):
     queryset = InsuranceClaim.objects.all()

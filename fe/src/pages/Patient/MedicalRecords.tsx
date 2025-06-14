@@ -11,25 +11,55 @@ export default function MedicalRecords() {
   const { user } = useAuthContext();
   const [selectedTab, setSelectedTab] = useState("overview");
 
-  // Mock data
+  // Expanded mock medical data for demo purposes
   const medicalHistory = [
     {
       id: 1,
       date: "2024-01-10",
       doctor: "BS. Nguyễn Văn A",
+      department: "Nội khoa",
       diagnosis: "Cảm cúm thông thường",
-      treatment: "Nghỉ ngơi, uống nhiều nước",
-      prescription: "Paracetamol 500mg",
-      notes: "Bệnh nhân khỏe mạnh, không có biến chứng",
+      treatment: "Nghỉ ngơi, uống nhiều nước, thuốc hạ sốt",
+      prescription: "Paracetamol 500mg x 3 lần/ngày",
+      notes: "Bệnh nhân khỏe mạnh, không có biến chứng. Tái khám nếu có triệu chứng nặng hơn.",
+      visitType: "Khám bệnh",
+      followUp: "2024-01-17",
     },
     {
       id: 2,
       date: "2023-12-15",
       doctor: "BS. Trần Thị B",
+      department: "Y học dự phòng",
       diagnosis: "Khám sức khỏe định kỳ",
-      treatment: "Tư vấn dinh dưỡng",
-      prescription: "Vitamin tổng hợp",
-      notes: "Chỉ số sức khỏe bình thường",
+      treatment: "Tư vấn dinh dưỡng và lối sống",
+      prescription: "Vitamin tổng hợp x 1 lần/ngày",
+      notes: "Chỉ số sức khỏe bình thường. Khuyến nghị tập thể dục đều đặn.",
+      visitType: "Khám định kỳ",
+      followUp: "2024-06-15",
+    },
+    {
+      id: 3,
+      date: "2023-11-20",
+      doctor: "BS. Lê Văn C",
+      department: "Tim mạch",
+      diagnosis: "Kiểm tra huyết áp",
+      treatment: "Theo dõi huyết áp hàng ngày",
+      prescription: "Không cần thuốc",
+      notes: "Huyết áp ở mức bình thường. Duy trì chế độ ăn ít muối.",
+      visitType: "Tái khám",
+      followUp: "2024-02-20",
+    },
+    {
+      id: 4,
+      date: "2023-10-05",
+      doctor: "BS. Phạm Thị D",
+      department: "Tiêu hóa",
+      diagnosis: "Đau dạ dày do stress",
+      treatment: "Thuốc kháng acid, giảm stress",
+      prescription: "Omeprazole 20mg x 1 lần/ngày trước ăn",
+      notes: "Triệu chứng cải thiện sau 1 tuần điều trị. Tránh thực phẩm cay nóng.",
+      visitType: "Khám bệnh",
+      followUp: "2023-10-19",
     },
   ];
 
@@ -38,10 +68,21 @@ export default function MedicalRecords() {
       id: 1,
       date: "2024-01-08",
       testName: "Công thức máu",
+      orderNumber: "XN001",
       results: {
+        "Hồng cầu": {
+          value: "4.5 x10⁶/µL",
+          normal: "4.0-5.5 x10⁶/µL",
+          status: "normal",
+        },
         Hemoglobin: {
           value: "14.2 g/dL",
           normal: "12-16 g/dL",
+          status: "normal",
+        },
+        Hematocrit: {
+          value: "42.1 %",
+          normal: "36-48 %",
           status: "normal",
         },
         "Bạch cầu": {
@@ -56,20 +97,32 @@ export default function MedicalRecords() {
         },
       },
       doctor: "BS. Lê Văn C",
+      interpretation: "Các chỉ số máu trong giới hạn bình thường.",
     },
     {
       id: 2,
       date: "2023-12-10",
       testName: "Sinh hóa máu",
+      orderNumber: "XN002",
       results: {
-        Glucose: {
+        "Glucose lúc đói": {
           value: "5.2 mmol/L",
           normal: "3.9-6.1 mmol/L",
           status: "normal",
         },
-        Cholesterol: {
+        "Cholesterol toàn phần": {
           value: "4.8 mmol/L",
           normal: "< 5.2 mmol/L",
+          status: "normal",
+        },
+        "HDL-C": {
+          value: "1.4 mmol/L",
+          normal: "> 1.0 mmol/L",
+          status: "normal",
+        },
+        "LDL-C": {
+          value: "2.8 mmol/L",
+          normal: "< 3.4 mmol/L",
           status: "normal",
         },
         Triglycerides: {
@@ -79,12 +132,62 @@ export default function MedicalRecords() {
         },
       },
       doctor: "BS. Phạm Thị D",
+      interpretation: "Chức năng gan và lipid máu bình thường.",
+    },
+    {
+      id: 3,
+      date: "2023-11-25",
+      testName: "Nước tiểu",
+      orderNumber: "XN003",
+      results: {
+        Protein: {
+          value: "Âm tính",
+          normal: "Âm tính",
+          status: "normal",
+        },
+        Glucose: {
+          value: "Âm tính",
+          normal: "Âm tính",
+          status: "normal",
+        },
+        "Bạch cầu": {
+          value: "1-2/hpf",
+          normal: "0-5/hpf",
+          status: "normal",
+        },
+        "Hồng cầu": {
+          value: "0-1/hpf",
+          normal: "0-2/hpf",
+          status: "normal",
+        },
+      },
+      doctor: "BS. Hoàng Văn E",
+      interpretation: "Nước tiểu bình thường, không phát hiện bất thường.",
     },
   ];
 
   const allergies = [
-    { allergen: "Penicillin", reaction: "Phát ban", severity: "Trung bình" },
-    { allergen: "Tôm cua", reaction: "Khó thở", severity: "Nghiêm trọng" },
+    { 
+      allergen: "Penicillin", 
+      reaction: "Phát ban, ngứa", 
+      severity: "Trung bình",
+      diagnosedDate: "2020-03-15",
+      notes: "Tránh tất cả thuốc kháng sinh nhóm Beta-lactam"
+    },
+    { 
+      allergen: "Tôm cua", 
+      reaction: "Khó thở, sưng môi", 
+      severity: "Nghiêm trọng",
+      diagnosedDate: "2018-07-20",
+      notes: "Mang theo thuốc chống dị ứng khi cần thiết"
+    },
+    { 
+      allergen: "Phấn hoa", 
+      reaction: "Hắt hơi, chảy nước mũi", 
+      severity: "Nhẹ",
+      diagnosedDate: "2019-04-10",
+      notes: "Triệu chứng thường xuất hiện vào mùa xuân"
+    },
   ];
 
   const medications = [
@@ -95,6 +198,58 @@ export default function MedicalRecords() {
       startDate: "2024-01-01",
       endDate: "2024-04-01",
       status: "active",
+      doctor: "BS. Trần Thị B",
+      purpose: "Bổ sung vitamin D",
+    },
+    {
+      name: "Calcium Carbonate",
+      dosage: "500mg",
+      frequency: "2 lần/ngày",
+      startDate: "2024-01-01",
+      endDate: "2024-03-01",
+      status: "active",
+      doctor: "BS. Trần Thị B",
+      purpose: "Tăng cường xương khớp",
+    },
+    {
+      name: "Omeprazole",
+      dosage: "20mg",
+      frequency: "1 lần/ngày trước ăn",
+      startDate: "2023-10-05",
+      endDate: "2023-11-05",
+      status: "completed",
+      doctor: "BS. Phạm Thị D",
+      purpose: "Điều trị đau dạ dày",
+    },
+  ];
+
+  const vitalSigns = [
+    {
+      date: "2024-01-10",
+      bloodPressure: "120/80",
+      heartRate: "72",
+      temperature: "36.5",
+      weight: "68",
+      height: "170",
+      bmi: "23.5",
+    },
+    {
+      date: "2023-12-15", 
+      bloodPressure: "118/75",
+      heartRate: "70",
+      temperature: "36.3",
+      weight: "67.5",
+      height: "170",
+      bmi: "23.4",
+    },
+    {
+      date: "2023-11-20",
+      bloodPressure: "125/82",
+      heartRate: "75",
+      temperature: "36.4",
+      weight: "68.2",
+      height: "170",
+      bmi: "23.6",
     },
   ];
 
@@ -257,10 +412,16 @@ export default function MedicalRecords() {
                     Bác sĩ: {record.doctor}
                   </p>
                   <p className="text-sm text-gray-600 mb-1">
+                    Phòng khám: {record.department}
+                  </p>
+                  <p className="text-sm text-gray-600 mb-1">
                     Phương pháp điều trị: {record.treatment}
                   </p>
                   <p className="text-sm text-gray-600 mb-1">
                     Đơn thuốc: {record.prescription}
+                  </p>
+                  <p className="text-sm text-gray-600 mb-1">
+                    Loại hình khám: {record.visitType}
                   </p>
                   <p className="text-sm text-gray-600">
                     Ghi chú: {record.notes}
@@ -301,6 +462,9 @@ export default function MedicalRecords() {
                   <p className="text-sm text-gray-600">
                     Bác sĩ: {result.doctor}
                   </p>
+                  <p className="text-sm text-gray-600">
+                    Giải thích: {result.interpretation}
+                  </p>
                 </div>
               ))}
             </div>
@@ -326,6 +490,9 @@ export default function MedicalRecords() {
                   <p className="text-sm text-gray-600 mb-1">
                     Thời gian kết thúc:{" "}
                     {new Date(medication.endDate).toLocaleDateString("vi-VN")}
+                  </p>
+                  <p className="text-sm text-gray-600 mb-1">
+                    Mục đích: {medication.purpose}
                   </p>
                   <span
                     className={`text-xs px-2 py-1 rounded-full ${

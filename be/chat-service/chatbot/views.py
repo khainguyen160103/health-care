@@ -7,6 +7,8 @@ from .intents import (
     detect_intent, get_booking_info, get_working_time_info,
     get_address_info, get_price_info, get_faq_info
 )
+from rest_framework.decorators import api_view
+from django.utils import timezone
 import numpy as np
 
 class ChatbotDiagnosisView(APIView):
@@ -53,3 +55,34 @@ class ChatbotQAView(APIView):
                 data = get_faq_info()
             return Response(data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def chat_history(request):
+    """Lấy lịch sử chat của user"""
+    # Implement chat history logic here
+    return Response({
+        'message': 'Chat history endpoint',
+        'history': []
+    })
+
+@api_view(['POST'])
+def save_chat(request):
+    """Lưu cuộc trò chuyện"""
+    user_message = request.data.get('user_message')
+    bot_response = request.data.get('bot_response')
+    
+    # Save to database if needed
+    return Response({
+        'message': 'Chat saved successfully',
+        'user_message': user_message,
+        'bot_response': bot_response
+    })
+
+class HealthCheckView(APIView):
+    """Health check cho chat service"""
+    def get(self, request):
+        return Response({
+            'status': 'healthy',
+            'service': 'chat-service',
+            'timestamp': timezone.now()
+        })

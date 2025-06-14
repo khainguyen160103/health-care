@@ -114,6 +114,91 @@ class PatientViewSet(viewsets.ModelViewSet):
             pass
         return Response([], status=status.HTTP_200_OK)
 
+    @action(detail=False, methods=['get'])
+    def lab_results(self, request):
+        """Lấy kết quả xét nghiệm của bệnh nhân"""
+        user_id, error = self._get_user_id(request)
+        if error:
+            return error
+        try:
+            patient = Patient.objects.get(user_id=user_id)
+            resp = requests.get(f'http://laboratory-service:5005/api/tests/?patient_id={patient.id}')
+            if resp.status_code == 200:
+                return Response(resp.json())
+        except Exception:
+            pass
+        return Response([], status=status.HTTP_200_OK)
+    
+    @action(detail=False, methods=['post'])
+    def add_medical_record(self, request):
+        """Thêm hồ sơ bệnh án mới"""
+        user_id, error = self._get_user_id(request)
+        if error:
+            return error
+        try:
+            patient = Patient.objects.get(user_id=user_id)
+            record_data = request.data.copy()
+            record_data['patient'] = patient.id
+            serializer = MedicalRecordSerializer(data=record_data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Patient.DoesNotExist:
+            return Response({'error': 'Patient profile not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    @action(detail=False, methods=['get'])
+    def dashboard_data(self, request):
+        """Lấy dữ liệu tổng hợp cho dashboard bệnh nhân"""
+        user_id, error = self._get_user_id(request)
+        if error:
+            return error
+        try:
+            patient = Patient.objects.get(user_id=user_id)
+            
+            # Thu thập dữ liệu từ các services
+            dashboard_data = {
+                'patient_info': PatientSerializer(patient).data,
+                'total_appointments': 0,
+                'upcoming_appointments': [],
+                'recent_prescriptions': [],
+                'pending_bills': [],
+                'recent_lab_results': []
+            }
+            
+            # Lấy appointments
+            try:
+                resp = requests.get(f'http://appointment-service:5004/api/appointments/?patient_id={patient.id}&limit=5')
+                if resp.status_code == 200:
+                    appointments = resp.json()
+                    dashboard_data['total_appointments'] = len(appointments)
+                    dashboard_data['upcoming_appointments'] = [
+                        apt for apt in appointments if apt['status'] in ['pending', 'confirmed']
+                    ][:3]
+            except Exception:
+                pass
+            
+            # Lấy prescriptions
+            try:
+                resp = requests.get(f'http://phamarcy-service:5006/api/prescriptions/?patient_id={patient.id}&limit=3')
+                if resp.status_code == 200:
+                    dashboard_data['recent_prescriptions'] = resp.json()
+            except Exception:
+                pass
+            
+            # Lấy bills
+            try:
+                resp = requests.get(f'http://billing-service:5007/api/bills/?patient_id={patient.id}&status=pending')
+                if resp.status_code == 200:
+                    dashboard_data['pending_bills'] = resp.json()
+            except Exception:
+                pass
+            
+            return Response(dashboard_data)
+            
+        except Patient.DoesNotExist:
+            return Response({'error': 'Patient profile not found'}, status=status.HTTP_404_NOT_FOUND)
+
     def create(self, request, *args, **kwargs):
         """Tạo patient profile từ auth-service"""
         try:
