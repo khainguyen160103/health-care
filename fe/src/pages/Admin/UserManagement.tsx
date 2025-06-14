@@ -3,7 +3,6 @@ import PageMeta from "../../components/common/PageMeta";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
 import Button from "../../components/ui/button/Button";
-import { PlusIcon } from "../../icons";
 
 export default function UserManagement() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -122,7 +121,7 @@ export default function UserManagement() {
         </div>
         <Button
           variant="primary"
-          startIcon={<PlusIcon />}
+          // startIcon={<PlusIcon />}
           onClick={() => setShowAddUser(true)}
         >
           Add User

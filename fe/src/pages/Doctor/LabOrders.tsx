@@ -3,7 +3,6 @@ import PageMeta from "../../components/common/PageMeta";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
 import Button from "../../components/ui/button/Button";
-import { PlusIcon, EyeIcon } from "../../icons";
 
 interface OrderForm {
   patientId: string;
@@ -69,7 +68,7 @@ export default function LabOrders() {
             onClick={() => setShowAddForm(true)}
             className="flex items-center space-x-2"
           >
-            <PlusIcon className="h-4 w-4" />
+            {/* <PlusIcon className="h-4 w-4" /> */}
             <span>Tạo Yêu Cầu Mới</span>
           </Button>
         </div>
@@ -183,7 +182,7 @@ export default function LabOrders() {
                   </p>
                 </div>
                 <Button variant="outline" size="sm">
-                  <EyeIcon className="h-4 w-4 mr-1" />
+                  {/* <EyeIcon className="h-4 w-4 mr-1" /> */}
                   Chi Tiết
                 </Button>
               </div>

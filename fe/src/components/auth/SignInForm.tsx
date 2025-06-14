@@ -1,6 +1,5 @@
 import { useState, useCallback, memo } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { EyeCloseIcon, EyeIcon } from "../../icons";
 import { useAuthContext } from "../../context/AuthContext";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
@@ -85,8 +84,8 @@ const SignInForm = memo(() => {
     <div className="rounded-lg border border-stroke bg-white p-6 shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="w-full">
         <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
-          <span className="mb-1.5 block font-medium">Bắt đầu miễn phí</span>
-          <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
+          <span className="mb-1.5 block ">Bắt đầu miễn phí</span>
+          <h2 className="mb-9 text-2xl text-black dark:text-white sm:text-title-xl2">
             Đăng Nhập Vào Hệ Thống Chăm Sóc Sức Khỏe
           </h2>
 
@@ -124,7 +123,16 @@ const SignInForm = memo(() => {
                   className="absolute right-4 top-4 cursor-pointer"
                   onClick={togglePasswordVisibility}
                 >
-                  {showPassword ? <EyeIcon /> : <EyeCloseIcon />}
+                  {showPassword ? (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                    </svg>
+                  )}
                 </span>
               </div>
             </div>

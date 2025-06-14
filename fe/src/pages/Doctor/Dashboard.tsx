@@ -1,7 +1,6 @@
 import {
   useDoctorProfile,
   useDoctorAppointments,
-  useDoctorSchedule,
 } from "../../hooks";
 import { format, isToday } from "date-fns";
 import Button from "../../components/ui/button/Button";
@@ -9,7 +8,6 @@ import { Link } from "react-router-dom";
 import PageMeta from "../../components/common/PageMeta";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
-// import { CalenderIcon, UserIcon } from "../../icons";
 
 export default function DoctorDashboard() {
   const { data: profile, isLoading: profileLoading } = useDoctorProfile();
@@ -19,12 +17,62 @@ export default function DoctorDashboard() {
       status: "confirmed",
     });
 
+  // Mock data for demo purposes
+  const mockTodayAppointments = {
+    results: [
+      {
+        id: "1",
+        patient_info: {
+          name: "Nguyễn Văn A",
+          age: 35,
+          phone: "0901234567"
+        },
+        scheduled_time: new Date().toISOString(),
+        note: "Khám tổng quát định kỳ",
+        status: "confirmed",
+        appointment_type: "Khám tổng quát"
+      },
+      {
+        id: "2", 
+        patient_info: {
+          name: "Trần Thị B",
+          age: 42,
+          phone: "0907654321"
+        },
+        scheduled_time: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(), // +2 hours
+        note: "Tái khám tim mạch",
+        status: "confirmed",
+        appointment_type: "Tái khám"
+      },
+      {
+        id: "3",
+        patient_info: {
+          name: "Lê Văn C", 
+          age: 28,
+          phone: "0912345678"
+        },
+        scheduled_time: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(), // +4 hours
+        note: "Khám chuyên khoa tiêu hóa",
+        status: "confirmed", 
+        appointment_type: "Khám chuyên khoa"
+      }
+    ]
+  };
+
+  const mockStats = {
+    todayAppointments: 8,
+    totalPatients: 156,
+    pendingReports: 12,
+    newLabResults: 5,
+    monthlyPatients: 234,
+    avgConsultationTime: 25 // minutes
+  };
+
   if (profileLoading) return <div>Đang tải...</div>;
 
-  const todayCount =
-    todayAppointments?.results?.filter((apt: any) =>
+  const todayCount = todayAppointments?.results?.filter((apt: any) =>
       isToday(new Date(apt.scheduled_time))
-    ).length || 0;
+    ).length || mockStats.todayAppointments;
 
   return (
     <>
@@ -42,24 +90,26 @@ export default function DoctorDashboard() {
               <p className="text-2xl font-bold text-primary">{todayCount}</p>
               <p className="text-sm text-gray-500">Đã Lên Lịch</p>
             </div>
-            <CalenderIcon className="h-8 w-8 text-primary" />
+            <svg className="h-8 w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4m-6 4h6m-6 0a1 1 0 00-1 1v8a1 1 0 001 1h6a1 1 0 001-1v-8a1 1 0 00-1-1" />
+            </svg>
           </div>
-        </ComponentCard>
-
-        <ComponentCard title="Tổng Số Bệnh Nhân">
+        </ComponentCard>        <ComponentCard title="Tổng Số Bệnh Nhân">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-2xl font-bold text-success">156</p>
+              <p className="text-2xl font-bold text-success">{mockStats.totalPatients}</p>
               <p className="text-sm text-gray-500">Đang Điều Trị</p>
             </div>
-            <UserIcon className="h-8 w-8 text-success" />
+            <svg className="h-8 w-8 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
           </div>
         </ComponentCard>
 
         <ComponentCard title="Báo Cáo Chờ Duyệt">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-2xl font-bold text-warning">12</p>
+              <p className="text-2xl font-bold text-warning">{mockStats.pendingReports}</p>
               <p className="text-sm text-gray-500">Cần Xem Xét</p>
             </div>
             {/* ClipboardIcon is not available */}
@@ -69,7 +119,7 @@ export default function DoctorDashboard() {
         <ComponentCard title="Kết Quả Xét Nghiệm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-2xl font-bold text-error">5</p>
+              <p className="text-2xl font-bold text-error">{mockStats.newLabResults}</p>
               <p className="text-sm text-gray-500">Kết Quả Mới</p>
             </div>
             {/* <BellIcon className="h-8 w-8 text-error" /> */}
@@ -121,11 +171,34 @@ export default function DoctorDashboard() {
                       </span>
                     </div>
                   </div>
-                ))
-            ) : (
-              <p className="text-gray-600 dark:text-gray-400">
-                Không có lịch hẹn hôm nay
-              </p>
+                ))            ) : (
+              // Show mock appointments for demo
+              mockTodayAppointments.results.slice(0, 5).map((appointment) => (
+                <div
+                  key={appointment.id}
+                  className="flex justify-between items-center p-3 border rounded-lg"
+                >
+                  <div>
+                    <h4 className="font-medium text-gray-900 dark:text-white">
+                      {appointment.patient_info.name}
+                    </h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {appointment.note}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Tuổi: {appointment.patient_info.age} - SĐT: {appointment.patient_info.phone}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-medium text-gray-900 dark:text-white">
+                      {format(new Date(appointment.scheduled_time), "HH:mm")}
+                    </p>
+                    <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                      Đã xác nhận
+                    </span>
+                  </div>
+                </div>
+              ))
             )}
           </div>
         </ComponentCard>

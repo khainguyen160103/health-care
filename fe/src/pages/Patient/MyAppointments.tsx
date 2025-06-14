@@ -2,7 +2,6 @@ import PageMeta from "../../components/common/PageMeta";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
 import Button from "../../components/ui/button/Button";
-// import { EditIcon, TrashIcon } from "../../icons";
 
 export default function MyAppointments() {
   const appointments = [

@@ -10,7 +10,6 @@ import { useAuthContext } from "../../context/AuthContext";
 import PageMeta from "../../components/common/PageMeta";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
-import { CalenderIcon, DollarLineIcon, UserIcon } from "../../icons";
 
 export default function PatientDashboard() {
   const { user } = useAuthContext();
@@ -157,7 +156,9 @@ export default function PatientDashboard() {
               </p>
               <p className="text-sm text-gray-500">Đã Lên Lịch</p>
             </div>
-            <CalenderIcon className="h-8 w-8 text-primary" />
+            <svg className="h-8 w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4m-6 4h6m-6 0a1 1 0 00-1 1v8a1 1 0 001 1h6a1 1 0 001-1v-8a1 1 0 00-1-1" />
+            </svg>
           </div>
         </ComponentCard>
 
@@ -181,7 +182,9 @@ export default function PatientDashboard() {
               </p>
               <p className="text-sm text-gray-500">Hiện Tại</p>
             </div>
-            <UserIcon className="h-8 w-8 text-warning" />
+            <svg className="h-8 w-8 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
           </div>
         </ComponentCard>
 
@@ -209,7 +212,7 @@ export default function PatientDashboard() {
               </p>
               <p className="text-sm text-gray-500">Số Tiền</p>
             </div>
-            <DollarLineIcon className="h-8 w-8 text-error" />
+            {/* <DollarLineIcon className="h-8 w-8 text-error" /> */}
           </div>
         </ComponentCard>
       </div>

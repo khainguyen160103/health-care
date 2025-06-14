@@ -3,7 +3,6 @@ import PageMeta from "../../components/common/PageMeta";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
 import Button from "../../components/ui/button/Button";
-import { PlusIcon, DownloadIcon } from "../../icons";
 
 export default function MedicalReports() {
   const [showAddForm, setShowAddForm] = useState(false);
@@ -43,7 +42,7 @@ export default function MedicalReports() {
             onClick={() => setShowAddForm(true)}
             className="flex items-center space-x-2"
           >
-            <PlusIcon className="h-4 w-4" />
+            {/* <PlusIcon className="h-4 w-4" /> */}
             <span>Tạo Báo Cáo Mới</span>
           </Button>
         </div>
@@ -177,7 +176,7 @@ export default function MedicalReports() {
                     Xem
                   </Button>
                   <Button variant="outline" size="sm">
-                    <DownloadIcon className="h-4 w-4 mr-1" />
+                    {/* <DownloadIcon className="h-4 w-4 mr-1" /> */}
                     Tải
                   </Button>
                 </div>

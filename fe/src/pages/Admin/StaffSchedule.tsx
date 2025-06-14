@@ -3,7 +3,6 @@ import PageMeta from "../../components/common/PageMeta";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
 import Button from "../../components/ui/button/Button";
-import { PlusIcon } from "../../icons";
 
 export default function StaffSchedule() {
   const [selectedWeek, setSelectedWeek] = useState("2024-W03");
@@ -102,7 +101,7 @@ export default function StaffSchedule() {
         </div>
         <Button
           variant="primary"
-          startIcon={<PlusIcon />}
+          // startIcon={<PlusIcon />}
           onClick={() => setShowAddSchedule(true)}
         >
           Add Schedule

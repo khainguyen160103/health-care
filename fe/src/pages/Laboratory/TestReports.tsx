@@ -3,7 +3,6 @@ import PageMeta from "../../components/common/PageMeta";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
 import Button from "../../components/ui/button/Button";
-import { PlusIcon, DownloadIcon } from "../../icons";
 
 export default function TestReports() {
   const [showAddReport, setShowAddReport] = useState(false);
@@ -233,7 +232,7 @@ export default function TestReports() {
       <div className="mb-6">
         <Button
           variant="primary"
-          startIcon={<PlusIcon />}
+          // startIcon={<PlusIcon />}
           onClick={() => setShowAddReport(true)}
         >
           Thêm báo cáo xét nghiệm
@@ -444,7 +443,7 @@ export default function TestReports() {
                 <Button
                   size="sm"
                   variant="outline"
-                  startIcon={<DownloadIcon />}
+                  // startIcon={<DownloadIcon />}
                 >
                   Tải về
                 </Button>
